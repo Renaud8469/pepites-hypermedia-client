@@ -7,15 +7,16 @@ const config = require('./config')
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/', function (req, res) {
-	let application_ping, result = 'Hello World! <br> The API ';
-
+	let result = 'Hello World! <br> Here are the API call results : <br>';
+	
+	// Ping the application resource to check the connection to the API
 	request(config.api.url + 'api/application/ping', function(error, response, body) {
-		if (!error && response.statusCode == 200) {
-			application_ping = body;
-			result += 'responded well : ' + application_ping;
-		} else { 
-			result += 'did not respond well.';
-		}
+		result += 'application/ping : ';
+		if (!error && response.statusCode == 200)
+			result += body;
+		else 
+			result += response.statusCode + ' ' + error;
+		result += '<br>';
 		res.send(result);
 	});
 })
