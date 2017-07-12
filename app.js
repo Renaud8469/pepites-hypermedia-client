@@ -3,6 +3,7 @@ const app = express()
 const request = require('request')
 
 const config = require('./config')
+const minimal_application = require('./minimal_application.json')
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -17,7 +18,23 @@ app.get('/', function (req, res) {
 		else 
 			result += response.statusCode + ' ' + error;
 		result += '<br>';
-		res.send(result);
+
+		// Creating an application and saving the ID
+		result += 'POSTing to "application/" to create an application : ';
+		request({
+			url: config.api.url + 'api/application', 
+			body: minimal_application,
+			method: 'post', 
+			json: true
+		}, function(error, response, body) {
+			if (!error && response.statusCode == 201)
+				result += 'Success ! My application can be found with id : ' + body._id;
+			else 
+				result += 'Failure... ' + error;
+			result += '<br>';
+			res.send(result);
+		});
+
 	});
 })
 
