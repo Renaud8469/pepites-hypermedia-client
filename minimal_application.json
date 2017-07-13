@@ -1,0 +1,11 @@
+{
+	  "contact": {
+		  "name": "Dahl",
+		  "firstname": "Renaud",
+		  "email": "renaud.dahl@free.fr",
+		  "phone": "0651665723",
+		  "situation": "student",
+		  "isRenew": "false",
+		  "schoolYear": 2017
+	}
+}
