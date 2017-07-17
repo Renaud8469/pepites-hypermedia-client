@@ -1,0 +1,96 @@
+{
+  "project": {
+    "name": "Non",
+    "summary": "Ceci est un texte pour r\u00e9sumer mon incroyable projet. ",
+    "type": "creation",
+    "site": "",
+    "status": "asso",
+    "blog": "",
+    "facebook": "",
+    "twitter": "",
+    "siret": "",
+    "activitySummary": "Sa valeur ajout\u00e9e est positive. ",
+    "stepSummary": "J'ai peut-\u00eatre commenc\u00e9, ou pas. ",
+    "sector": "12",
+    "otherSector": "",
+    "motiviation": "Motivation ? C'est quoi \u00e7a ?",
+    "teamType": "alone",
+    "linkedin": "",
+    "team": [
+      
+    ]
+  },
+  "contact": {
+    "name": "Dahl",
+    "firstname": "Renaud",
+    "email": "renaud.dahl@free.fr",
+    "phone": "0651665723",
+    "situation": "student",
+    "isRenew": "false",
+    "schoolYear": 2017
+  },
+  "profile": {
+    "gender": "male",
+    "situation": "graduate",
+    "askD2E": "",
+    "nationality": "FR",
+    "motivation": "Un statut. ",
+    "isPartTime": "false",
+    "hasActivity": "true",
+    "activity": "Informatique",
+    "isUnemployed": "false",
+    "isFreelance": "true",
+    "birthDate": "1994-10-16T00:00:00Z",
+    "birthPlace": "Pertuis",
+    "ine": "",
+    "address": "16 rue des Morteaux",
+    "cp": "92160",
+    "city": "Antony",
+    "country": "FR",
+    "twitter": "",
+    "facebook": "",
+    "linkedin": "",
+    "viadeo": ""
+  },
+  "career": {
+    "bac": {
+      "isOriginal": "true",
+      "type": "general",
+      "country": "FR",
+      "year": "2011",
+      "stream": "S",
+      "establishment": "Lyc\u00e9e Val de Durance",
+      "city": "Pertuis"
+    },
+    "diploma": {
+      "year": "2017-2018",
+      "type": "12",
+      "name": "Ing\u00e9nieur CentraleSup\u00e9lec",
+      "sector": "science",
+      "establishment": "CentraleSup\u00e9lec",
+      "city": "Paris"
+    },
+    "tutor": {
+      "name": "P\u00e9dagogique",
+      "firstname": "Responsable",
+      "email": "rpedago@edu.fr",
+      "skill": "Algorithmique",
+      "replaceInternship": "true",
+      "replaceModule": "true",
+      "askYearOff": "true"
+    },
+    "entrepreneurship": [
+      
+    ]
+  },
+  "pepite": {
+    "0": "0",
+    "1": "6",
+    "region": "4",
+    "establishment": "128",
+    "pepite": "16",
+    "askCoworking": "true"
+  }
+}
+
+
