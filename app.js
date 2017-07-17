@@ -8,6 +8,39 @@ const full_application = require('./full_application.json')
 
 app.set('port', (process.env.PORT || 5000));
 
+function request_api(route, method, req_body, result) {
+	const req_config = {
+		url: config.api.url + 'api/' + route,
+		method: method,
+		json: true
+	};
+	if (req_body)
+		req_config.body = req_body;
+	return new Promise(function(resolve, reject){
+		request(req_config, function(error, response, body) {
+			if (!error && response.statusCode < 400)
+				resolve(body)
+			else
+				reject(response.statusCode, error)
+		})
+	});
+}
+
+app.get('/promises', function(req, res) {
+	let result = 'Hey ! Here are the results you want. <br>';
+	// Ping the application resource
+	request_api('application/ping', 'get', null, result)
+		.catch((statuscode, error) => {
+			result += 'Error during API call : ' + statuscode + ' ' + error + '<br>';
+		}).then((body) => {
+			result += 'Ping application resource : ' + body + '<br>';
+		}).catch((error) => {
+			result += 'Error with API response processing : ' + error + '<br>';
+		}).then(() => {
+			res.send(result);
+		});
+});
+
 app.get('/', function (req, res) {
 	let result = 'Hello World! <br> Here are the API call results : <br>';
 	
