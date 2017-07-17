@@ -89,8 +89,16 @@ app.get('/', function(req, res) {
 			return request_api('application/' + application_id, 'put', full_application);
 		}).catch(apicall_error)
 		.then((body) => {
-			result += "Success ! Application completed. Next step : send it.";
-		})	
+			result += "Success ! Application completed. Next step : send it.<br>";
+	
+	// Send the application
+		}).then(() => {
+			result += "<br> Send the application to the PEPITE : ";
+			return request_api('application/' + application_id + '/send', 'put', null);
+		}).catch(apicall_error)
+		.then((body) => {
+			result += "response received ! Your application status is now : " + body.status + ' .';
+		}).catch(unexpected_response)
 		.then(() => {
 			res.send(result);
 		});
