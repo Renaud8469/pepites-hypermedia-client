@@ -4,6 +4,7 @@ const request = require('request')
 
 const config = require('./config')
 const minimal_application = require('./minimal_application.json')
+const full_application = require('./full_application.json')
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -19,6 +20,33 @@ app.get('/', function (req, res) {
 			result += response.statusCode + ' ' + error;
 		result += '<br>';
 
+		// Get PEPITE for the establishment
+		result += 'Search for the PEPITE for CentraleSupélec : ';
+		request(config.api.url + 'api/establishment', function(error, response, body) {
+			if (!error && response.statusCode == 200) {
+				let pepite_id;
+				for (let establishment of JSON.parse(body)) {
+					if (establishment.name === "CentraleSupélec")
+						pepite_id = establishment.pepite
+				}
+				// get pepite name
+				request(config.api.url + 'api/pepite/' + pepite_id, function(error, response, body) {
+					if (!error && response.statusCode == 200)
+						result += 'Found ! It is called ' + JSON.parse(body).name;
+					else {
+						result += response.statusCode + ' ' + error;
+					}
+					res.send(result);
+				});	
+
+			} else {
+				result += response.statusCode + ' ' + error;
+				res.send(result);
+			}
+			result += '<br>';
+		});
+
+		/*
 		// Creating an application and saving the ID
 		result += 'POSTing to "application/" to create an application : ';
 		request({
@@ -34,6 +62,7 @@ app.get('/', function (req, res) {
 			result += '<br>';
 			res.send(result);
 		});
+		*/
 
 	});
 })
