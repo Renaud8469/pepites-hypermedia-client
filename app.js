@@ -6,7 +6,6 @@ const config = require('./config')
 const minimal_application = require('./minimal_application.json')
 const full_application = require('./full_application.json')
 
-app.set('port', (process.env.PORT || 5000));
 
 function request_api(route, method, req_body) {
 	const req_config = {
@@ -27,10 +26,16 @@ function request_api(route, method, req_body) {
 }
 
 
+let pepite_id, application_id;
+
+
+app.set('port', (process.env.PORT || 5000));
+
 
 app.get('/', function(req, res) {
 	let result = 'Hey ! Here are the results you want. <br>';
-	let pepite_id;
+
+	// Define the 2 error handlers we will use
 	function apicall_error(code, err) {
 		result += 'Error during API call : ' + code + ' ' + err + '<br>';
 	};
@@ -45,10 +50,10 @@ app.get('/', function(req, res) {
 		.then((body) => {
 			result += body + '<br>';
 		}).catch(unexpected_response)
+	
+	// Call the establishment resource to search for corresponding pepite
 		.then(() => {
 			result += '<br> Get PEPITE for CentraleSupélec : ';
-
-	// Call the establishment resource to search for corresponding pepite
 			return request_api('establishment','get', null)
 		}).catch(apicall_error)
 		.then((body) => {
@@ -59,11 +64,10 @@ app.get('/', function(req, res) {
 			if (!pepite_id)
 				throw new Error('Establishment not found');
 		}).catch(unexpected_response)
-		.then(() => {
-		
-	// Call to the pepite resource to get name
-			return request_api('pepite/' + pepite_id, 'get', null)
 
+	// Call to the pepite resource to get name
+		.then(() => {
+			return request_api('pepite/' + pepite_id, 'get', null)
 		}).catch(apicall_error)
 		.then((body) => {
 			result += "Its name is " + body.name + '<br>';
@@ -75,8 +79,18 @@ app.get('/', function(req, res) {
 			return request_api('application', 'post', minimal_application);
 		}).catch(apicall_error)
 		.then((body) => {
-			result += "Success ! My application ID is " + body._id;
+			application_id = body._id;
+			result += "Success ! My application ID is " + application_id;
 		}).catch(unexpected_response)
+	
+	// Complete the application
+		.then(() => {
+			result += "<br> Complete the application : ";
+			return request_api('application/' + application_id, 'put', full_application);
+		}).catch(apicall_error)
+		.then((body) => {
+			result += "Success ! Application completed. Next step : send it.";
+		})	
 		.then(() => {
 			res.send(result);
 		});
