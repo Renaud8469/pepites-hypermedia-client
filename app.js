@@ -47,8 +47,6 @@ app.set('port', (process.env.PORT || 5000));
 app.get('/', function(req, res) {
 	result = 'Hey ! Here are the results you want. <br>';
 
-;
-
 	// Ping the application resource
 	result += '<br> Ping application resource : '; 
 	request_api('application/ping', 'get', null)
@@ -111,9 +109,9 @@ app.get('/', function(req, res) {
 });
 
 
-// Group code for application reviewing in one function (only 2 words change between the 2 requests)
+// Group code for application reviewing 
 function review_application(verdict) {
-	app.get('/' + verdict + '-application', (req, res) => {
+	return function(req, res) {
 		result = 'The application was ';
 		if (!application_id) {
 			result += "not defined and thus can't be reviewed. Start with the root url to complete it then come back here.";
@@ -122,7 +120,7 @@ function review_application(verdict) {
 			request_api('committeeAnswer/' + application_id, 
 					'put', 
 					verdict === 'accept' ? answers.accepted : answers.rejected,
-				       	true)
+					true)
 				.catch(apicall_error)
 				.then((body) => {
 					result += body.status + ' ! '
@@ -131,10 +129,11 @@ function review_application(verdict) {
 					res.send(result)
 				});
 		};
-	});
+	}
 }
-review_application('accept');
-review_application('refuse');
+app.get('/accept-application', review_application('accept'));
+app.get('/refuse-application', review_application('refuse'));
+
 
 
 app.get('/application-status', (req, res) => {
