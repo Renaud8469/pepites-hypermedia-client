@@ -7,7 +7,7 @@ const minimal_application = require('./minimal_application.json')
 const full_application = require('./full_application.json')
 const answers = require('./answers.json')
 
-const token = ''; // TODO 
+const token = process.env.PEPITE_TOKEN || ''; 
 
 let pepite_id, application_id, result;
 
