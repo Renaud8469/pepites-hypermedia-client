@@ -60,7 +60,7 @@ app.get('/', function(req, res) {
 	// Call the establishment resource to search for corresponding pepite
 		.then(() => {
 			result += '<br> Get PEPITE for CentraleSupélec : ';
-			return request_api('establishment','get', null)
+			return request_api('establishment','get')
 		}).catch(apicall_error)
 		.then((body) => {
 			for (let school of body) {
@@ -73,7 +73,7 @@ app.get('/', function(req, res) {
 
 	// Call to the pepite resource to get name
 		.then(() => {
-			return request_api('pepite/' + pepite_id, 'get', null)
+			return request_api('pepite/' + pepite_id, 'get')
 		}).catch(apicall_error)
 		.then((body) => {
 			result += "Its name is " + body.name + '<br>';
@@ -100,7 +100,7 @@ app.get('/', function(req, res) {
 	// Send the application
 		}).then(() => {
 			result += "<br> Send the application to the PEPITE : ";
-			return request_api('application/' + application_id + '/send', 'put', null);
+			return request_api('application/' + application_id + '/send', 'put');
 		}).catch(apicall_error)
 		.then((body) => {
 			result += "response received ! Your application status is now : " + body.status + ' .';
@@ -135,6 +135,25 @@ function review_application(verdict) {
 }
 review_application('accept');
 review_application('refuse');
+
+
+app.get('/application-status', (req, res) => {
+	result = "Your application ";
+	if (!application_id) {
+		result += " is not yet defined. Start with the root url to complete it.";
+		res.send(result);
+	} else {
+		result += " status is : ";
+		request_api('application/' + application_id, 'get')
+			.catch(apicall_error)
+			.then((body) => {
+				result += body.status + '.';
+			}).catch(unexpected_response)
+			.then(() => {
+				res.send(result)
+			});
+	}
+});
 
 app.listen(app.get('port'), function () {
 	console.log('App listening on port 5000!')
