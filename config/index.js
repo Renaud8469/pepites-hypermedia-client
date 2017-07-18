@@ -1,5 +1,3 @@
-'use strict'
-
 const all = {
 	// API Url options
 	api: {
