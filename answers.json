@@ -1,0 +1,13 @@
+{
+	"accepted": {
+	       "opinion": "Positive opinion",
+	       "hasD2E": true,
+	       "status": "accepted"
+	},
+	"rejected": {
+		"opinion": "Negative opinion",
+		"hasD2E": false,
+		"status": "refused"
+	}
+}
+
