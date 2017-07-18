@@ -5,9 +5,13 @@ const request = require('request')
 const config = require('./config')
 const minimal_application = require('./minimal_application.json')
 const full_application = require('./full_application.json')
+const answers = require('./answers.json')
 
+const token = process.env.PEPITE_TOKEN || ''; 
 
-function request_api(route, method, req_body) {
+let pepite_id, application_id, result;
+
+function request_api(route, method, req_body, auth) {
 	const req_config = {
 		url: config.api.url + 'api/' + route,
 		method: method,
@@ -15,33 +19,35 @@ function request_api(route, method, req_body) {
 	};
 	if (req_body)
 		req_config.body = req_body;
+	if (auth)
+		req_config.headers = {
+			'Authorization': 'Bearer ' + token
+		};
 	return new Promise(function(resolve, reject){
 		request(req_config, function(error, response, body) {
 			if (!error && response.statusCode < 400)
 				resolve(body)
 			else
-				reject(response.statusCode, error)
+				reject(response ? response.statusCode : 400, error)
 		})
 	});
 }
 
-
-let pepite_id, application_id;
-
+// Define the 2 error handlers we will use
+function apicall_error(code, err) {
+	result += 'Error during API call : ' + code + ' ' + err + '<br>';
+}
+function unexpected_response(err) {
+	result += 'Error with API response processing : ' + err + '<br>';
+}
 
 app.set('port', (process.env.PORT || 5000));
 
 
 app.get('/', function(req, res) {
-	let result = 'Hey ! Here are the results you want. <br>';
+	result = 'Hey ! Here are the results you want. <br>';
 
-	// Define the 2 error handlers we will use
-	function apicall_error(code, err) {
-		result += 'Error during API call : ' + code + ' ' + err + '<br>';
-	};
-	function unexpected_response(err) {
-		result += 'Error with API response processing : ' + err + '<br>';
-	};
+;
 
 	// Ping the application resource
 	result += '<br> Ping application resource : '; 
@@ -54,7 +60,7 @@ app.get('/', function(req, res) {
 	// Call the establishment resource to search for corresponding pepite
 		.then(() => {
 			result += '<br> Get PEPITE for CentraleSupélec : ';
-			return request_api('establishment','get', null)
+			return request_api('establishment','get')
 		}).catch(apicall_error)
 		.then((body) => {
 			for (let school of body) {
@@ -67,7 +73,7 @@ app.get('/', function(req, res) {
 
 	// Call to the pepite resource to get name
 		.then(() => {
-			return request_api('pepite/' + pepite_id, 'get', null)
+			return request_api('pepite/' + pepite_id, 'get')
 		}).catch(apicall_error)
 		.then((body) => {
 			result += "Its name is " + body.name + '<br>';
@@ -94,7 +100,7 @@ app.get('/', function(req, res) {
 	// Send the application
 		}).then(() => {
 			result += "<br> Send the application to the PEPITE : ";
-			return request_api('application/' + application_id + '/send', 'put', null);
+			return request_api('application/' + application_id + '/send', 'put');
 		}).catch(apicall_error)
 		.then((body) => {
 			result += "response received ! Your application status is now : " + body.status + ' .';
@@ -102,6 +108,51 @@ app.get('/', function(req, res) {
 		.then(() => {
 			res.send(result);
 		});
+});
+
+
+// Group code for application reviewing in one function (only 2 words change between the 2 requests)
+function review_application(verdict) {
+	app.get('/' + verdict + '-application', (req, res) => {
+		result = 'The application was ';
+		if (!application_id) {
+			result += "not defined and thus can't be reviewed. Start with the root url to complete it then come back here.";
+			res.send(result);
+		} else {
+			request_api('committeeAnswer/' + application_id, 
+					'put', 
+					verdict === 'accept' ? answers.accepted : answers.rejected,
+				       	true)
+				.catch(apicall_error)
+				.then((body) => {
+					result += body.status + ' ! '
+				}).catch(unexpected_response)
+				.then(() => {
+					res.send(result)
+				});
+		};
+	});
+}
+review_application('accept');
+review_application('refuse');
+
+
+app.get('/application-status', (req, res) => {
+	result = "Your application ";
+	if (!application_id) {
+		result += " is not yet defined. Start with the root url to complete it.";
+		res.send(result);
+	} else {
+		result += " status is : ";
+		request_api('application/' + application_id, 'get')
+			.catch(apicall_error)
+			.then((body) => {
+				result += body.status + '.';
+			}).catch(unexpected_response)
+			.then(() => {
+				res.send(result)
+			});
+	}
 });
 
 app.listen(app.get('port'), function () {
