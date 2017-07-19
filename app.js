@@ -7,9 +7,9 @@ const minimal_application = require('./minimal_application.json')
 const full_application = require('./full_application.json')
 const answers = require('./answers.json')
 
-const token = process.env.PEPITE_TOKEN || ''; 
+const pass = process.env.PEPITE_PASS || ''; 
 
-let pepite_id, application_id, result;
+let pepite_id, pepite_email, application_id, result, token;
 
 function request_api(route, method, req_body, auth) {
 	const req_config = {
@@ -74,6 +74,7 @@ app.get('/', function(req, res) {
 			return request_api('pepite/' + pepite_id, 'get')
 		}).catch(apicall_error)
 		.then((body) => {
+			pepite_email = body.email;
 			result += "Its name is " + body.name + '<br>';
 		}).catch(unexpected_response)
 	
@@ -117,11 +118,18 @@ function review_application(verdict) {
 			result += "not defined and thus can't be reviewed. Start with the root url to complete it then come back here.";
 			res.send(result);
 		} else {
-			request_api('committeeAnswer/' + application_id, 
-					'put', 
-					verdict === 'accept' ? answers.accepted : answers.rejected,
-					true)
+			// First request to get the authent token
+			request_api('auth/', 'post', { email: pepite_email, password : pass })
 				.catch(apicall_error)
+				.then((body) => {
+					token = body.token;
+				}).catch(unexpected_response)
+				.then(() => {
+					// Actual request to access 
+					return request_api('committeeAnswer/' + application_id, 'put', 
+							verdict === 'accept' ? answers.accepted : answers.rejected,
+							true);
+				}).catch(apicall_error)
 				.then((body) => {
 					result += body.status + ' ! '
 				}).catch(unexpected_response)
