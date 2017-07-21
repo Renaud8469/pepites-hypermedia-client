@@ -2,9 +2,9 @@
   "name": "pepites-hypermedia-client",
   "version": "1.0.0",
   "description": "Client for the pepites api",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node server.js",
     "test": "echo 'OK' && exit 0"
   },
   "repository": {

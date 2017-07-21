@@ -1,37 +1,16 @@
 const express = require('express')
 const app = express()
-const request = require('request')
 
-const config = require('./config')
-const minimal_application = require('./minimal_application.json')
-const full_application = require('./full_application.json')
-const answers = require('./answers.json')
+const config = require('./boot/setup')
+const minimal_application = require('./data/minimal_application.json')
+const full_application = require('./data/full_application.json')
+const answers = require('./data/answers.json')
 
 const pass = process.env.PEPITE_PASS || ''; 
 
 let pepite_id, pepite_email, application_id, result, token;
 
-function request_api(route, method, req_body, auth) {
-	const req_config = {
-		url: config.api.url + 'api/' + route,
-		method: method,
-		json: true
-	};
-	if (req_body)
-		req_config.body = req_body;
-	if (auth)
-		req_config.headers = {
-			'Authorization': 'Bearer ' + token
-		};
-	return new Promise(function(resolve, reject){
-		request(req_config, function(error, response, body) {
-			if (!error && response.statusCode < 400)
-				resolve(body)
-			else
-				reject(response ? response.statusCode : 400, error)
-		})
-	});
-}
+const client = require('./client/http.client')
 
 // Define the 2 error handlers we will use
 function apicall_error(code, err) {
@@ -49,7 +28,7 @@ app.get('/', function(req, res) {
 
 	// Ping the application resource
 	result += '<br> Ping application resource : '; 
-	request_api('application/ping', 'get', null)
+	client.request_api('application/ping', 'get', null)
 		.catch(apicall_error)
 		.then((body) => {
 			result += body + '<br>';
@@ -58,7 +37,7 @@ app.get('/', function(req, res) {
 	// Call the establishment resource to search for corresponding pepite
 		.then(() => {
 			result += '<br> Get PEPITE for CentraleSupélec : ';
-			return request_api('establishment','get')
+			return client.request_api('establishment','get')
 		}).catch(apicall_error)
 		.then((body) => {
 			for (let school of body) {
@@ -71,7 +50,7 @@ app.get('/', function(req, res) {
 
 	// Call to the pepite resource to get name
 		.then(() => {
-			return request_api('pepite/' + pepite_id, 'get')
+			return client.request_api('pepite/' + pepite_id, 'get')
 		}).catch(apicall_error)
 		.then((body) => {
 			pepite_email = body.email;
@@ -81,7 +60,7 @@ app.get('/', function(req, res) {
 	// Create a minimal application 
 		.then(() => {
 			result += "<br> Create a minimal application : ";
-			return request_api('application', 'post', minimal_application);
+			return client.request_api('application', 'post', minimal_application);
 		}).catch(apicall_error)
 		.then((body) => {
 			application_id = body._id;
@@ -91,7 +70,7 @@ app.get('/', function(req, res) {
 	// Complete the application
 		.then(() => {
 			result += "<br> Complete the application : ";
-			return request_api('application/' + application_id, 'put', full_application);
+			return client.request_api('application/' + application_id, 'put', full_application);
 		}).catch(apicall_error)
 		.then((body) => {
 			result += "Success ! Application completed. Next step : send it.<br>";
@@ -99,7 +78,7 @@ app.get('/', function(req, res) {
 	// Send the application
 		}).then(() => {
 			result += "<br> Send the application to the PEPITE : ";
-			return request_api('application/' + application_id + '/send', 'put');
+			return client.request_api('application/' + application_id + '/send', 'put');
 		}).catch(apicall_error)
 		.then((body) => {
 			result += "response received ! Your application status is now : " + body.status + ' .';
@@ -119,16 +98,16 @@ function review_application(verdict) {
 			res.send(result);
 		} else {
 			// First request to get the authent token
-			request_api('auth/', 'post', { email: pepite_email, password : pass })
+			client.request_api('auth/', 'post', { email: pepite_email, password : pass })
 				.catch(apicall_error)
 				.then((body) => {
 					token = body.token;
 				}).catch(unexpected_response)
 				.then(() => {
 					// Actual request to access 
-					return request_api('committeeAnswer/' + application_id, 'put', 
+					return client.request_api('committeeAnswer/' + application_id, 'put', 
 							verdict === 'accept' ? answers.accepted : answers.rejected,
-							true);
+							token);
 				}).catch(apicall_error)
 				.then((body) => {
 					result += body.status + ' ! '
@@ -151,7 +130,7 @@ app.get('/application-status', (req, res) => {
 		res.send(result);
 	} else {
 		result += " status is : ";
-		request_api('application/' + application_id, 'get')
+		client.request_api('application/' + application_id, 'get')
 			.catch(apicall_error)
 			.then((body) => {
 				result += body.status + '.';
