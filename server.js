@@ -1,16 +1,16 @@
 const express = require('express')
 const app = express()
 
-const config = require('./boot/setup')
-const minimal_application = require('./data/minimal_application.json')
-const full_application = require('./data/full_application.json')
-const answers = require('./data/answers.json')
+const config = require('./lib/boot/setup')
+const minimal_application = require('./lib/data/minimal_application.json')
+const full_application = require('./lib/data/full_application.json')
+const answers = require('./lib/data/answers.json')
 
 const pass = process.env.PEPITE_PASS || ''; 
 
 let pepite_id, pepite_email, application_id, result, token;
 
-const client = require('./client/http.client')
+const client = require('./lib/client/http.client')
 
 // Define the 2 error handlers we will use
 function apicall_error(code, err) {
