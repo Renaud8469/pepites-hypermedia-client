@@ -1,16 +1,10 @@
 const express = require('express')
 const app = express()
 
-exports.app = app
+const boot = require('./lib/boot')
 
-exports.start = () => {
+boot.setPort(app)
 
+boot.setRoutes(app)
 
-
-}
-
-// const boot = require('./lib/boot')
-
-// boot.setPort(app)
-// // boot.setRoutes(app)
-// // boot.startListening(app)
+boot.startListening(app)
