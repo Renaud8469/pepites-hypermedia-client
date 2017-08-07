@@ -12,6 +12,12 @@
     "method": "get"
   },
   {
+    "name": "get-school",
+    "api-transition": "school-read",
+    "url": "",
+    "method": "get"
+  },
+  {
     "name": "get-pepite",
     "api-transition": "pepite-read",
     "url": "api/pepite/",
