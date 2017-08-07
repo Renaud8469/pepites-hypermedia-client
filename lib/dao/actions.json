@@ -8,7 +8,7 @@
   {
     "name": "search-school",
     "api-transition": "school-list",
-    "url": "api/establishment/",
+    "url": "",
     "method": "get"
   },
   {
@@ -20,13 +20,13 @@
   {
     "name": "create-application",
     "api-transition": "application-create",
-    "url": "api/application/",
+    "url": "",
     "method": "post"
   },
   {
     "name": "update-application",
     "api-transition": "application-update",
-    "url": "api/application/",
+    "url": "",
     "method": "put"
   },
   {
@@ -38,19 +38,19 @@
   {
     "name": "get-application-status",
     "api-transition": "application-read",
-    "url": "api/application/",
+    "url": "",
     "method": "get"
   },
   {
     "name": "get-token",
     "api-transition": "auth",
-    "url": "api/auth/",
+    "url": "",
     "method": "post"
   },
   {
     "name": "answer-application",
     "api-transition": "application-review",
-    "url": "api/committeeAnswer/",
+    "url": "",
     "method": "put"
   }
 ]
