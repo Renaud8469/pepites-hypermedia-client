@@ -25,6 +25,7 @@
   "dependencies": {
     "boom": "^5.2.0",
     "express": "^4.15.3",
+    "lodash": "^4.17.4",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },

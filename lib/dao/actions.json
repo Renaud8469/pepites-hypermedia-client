@@ -1,0 +1,56 @@
+[
+  {
+    "name": "home",
+    "api-transition": "root",
+    "url": "api/",
+    "method": "get"
+  },
+  {
+    "name": "search-school",
+    "api-transition": "school-list",
+    "url": "api/establishment/",
+    "method": "get"
+  },
+  {
+    "name": "get-pepite",
+    "api-transition": "pepite-read",
+    "url": "api/pepite/",
+    "method": "get"
+  },
+  {
+    "name": "create-application",
+    "api-transition": "application-create",
+    "url": "api/application/",
+    "method": "post"
+  },
+  {
+    "name": "update-application",
+    "api-transition": "application-update",
+    "url": "api/application/",
+    "method": "put"
+  },
+  {
+    "name": "send-application",
+    "api-transition": "application-send",
+    "url": "",
+    "method": "put"
+  },
+  {
+    "name": "get-application-status",
+    "api-transition": "application-read",
+    "url": "api/application/",
+    "method": "get"
+  },
+  {
+    "name": "get-token",
+    "api-transition": "auth",
+    "url": "api/auth/",
+    "method": "post"
+  },
+  {
+    "name": "answer-application",
+    "api-transition": "application-review",
+    "url": "api/committeeAnswer/",
+    "method": "put"
+  }
+]
