@@ -42,7 +42,7 @@
     "method": "put"
   },
   {
-    "name": "get-application-status",
+    "name": "get-application",
     "api-transition": "application-read",
     "url": "",
     "method": "get"
