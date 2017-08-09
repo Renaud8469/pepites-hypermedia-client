@@ -9,54 +9,54 @@
     "name": "search-school",
     "api-transition": "school-list",
     "url": "",
-    "method": "get"
+    "method": ""
   },
   {
     "name": "get-school",
     "api-transition": "school-read",
     "url": "",
-    "method": "get"
+    "method": ""
   },
   {
     "name": "get-pepite",
     "api-transition": "pepite-read",
     "url": "api/pepite/",
-    "method": "get"
+    "method": ""
   },
   {
     "name": "create-application",
     "api-transition": "application-create",
     "url": "",
-    "method": "post"
+    "method": ""
   },
   {
     "name": "update-application",
     "api-transition": "application-update",
     "url": "",
-    "method": "put"
+    "method": ""
   },
   {
     "name": "send-application",
     "api-transition": "application-send",
     "url": "",
-    "method": "put"
+    "method": ""
   },
   {
     "name": "get-application",
     "api-transition": "application-read",
     "url": "",
-    "method": "get"
+    "method": ""
   },
   {
     "name": "get-token",
     "api-transition": "auth",
     "url": "",
-    "method": "post"
+    "method": ""
   },
   {
     "name": "answer-application",
     "api-transition": "application-review",
     "url": "",
-    "method": "put"
+    "method": ""
   }
 ]
