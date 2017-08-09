@@ -7,56 +7,38 @@
   },
   {
     "name": "search-school",
-    "api-transition": "school-list",
-    "url": "",
-    "method": ""
+    "api-transition": "school-list"
   },
   {
     "name": "get-school",
-    "api-transition": "school-read",
-    "url": "",
-    "method": ""
+    "api-transition": "school-read"
   },
   {
     "name": "get-pepite",
-    "api-transition": "pepite-read",
-    "url": "api/pepite/",
-    "method": ""
+    "api-transition": "pepite-read"
   },
   {
     "name": "create-application",
-    "api-transition": "application-create",
-    "url": "",
-    "method": ""
+    "api-transition": "application-create"
   },
   {
     "name": "update-application",
-    "api-transition": "application-update",
-    "url": "",
-    "method": ""
+    "api-transition": "application-update"
   },
   {
     "name": "send-application",
-    "api-transition": "application-send",
-    "url": "",
-    "method": ""
+    "api-transition": "application-send"
   },
   {
     "name": "get-application",
-    "api-transition": "application-read",
-    "url": "",
-    "method": ""
+    "api-transition": "application-read"
   },
   {
     "name": "get-token",
-    "api-transition": "auth",
-    "url": "",
-    "method": ""
+    "api-transition": "auth"
   },
   {
     "name": "answer-application",
-    "api-transition": "application-review",
-    "url": "",
-    "method": ""
+    "api-transition": "application-review"
   }
 ]
